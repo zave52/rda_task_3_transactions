@@ -32,6 +32,12 @@ jobs:
     - name: Run the SQL tests
       run: docker exec mysql sh -c 'mysql -u root -pP@ssw0rd < /scripts/test.sql' > log.txt
     
+    - name: Check the SQL test results 
+      run: |
+        echo "checking the test log:"
+        errors=$(cat log.txt | grep "^Error" || true)
+        if [ -n "$errors" ]; then echo $errors && exit 1; fi
+    
     - name: Run the bash tests 
       run: |
         ./test.sh
